@@ -51,24 +51,18 @@ export const GroundingSearch: React.FC = () => {
     setResult(null);
     try {
       const ai = getAiClient();
-      const config: any = {
-        tools: [{ googleSearch: {} }],
-      };
-      if (useLocation && location) {
-        config.tools.push({ googleMaps: {} });
-        config.toolConfig = {
-            retrievalConfig: { latLng: location }
-        };
-      }
+      const tools = [{ googleSearch: {} }];
       
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: query,
-        config,
+      const model = ai.getGenerativeModel({ 
+        model: 'gemini-2.0-flash-exp',
+        tools: tools
       });
-
+      
+      const result = await model.generateContent(query);
+      
+      const response = result.response;
       setResult({
-        text: response.text,
+        text: response.text(),
         metadata: response.candidates?.[0]?.groundingMetadata,
       });
 

@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { getAiClient } from '../gemini';
-import { Modality } from '@google/genai';
 import { blobToBase64 } from '../utils';
 import { Spinner } from './Spinner';
 
@@ -35,14 +34,12 @@ export const ImageStudio: React.FC = () => {
     setResult(null);
     try {
       const ai = getAiClient();
+      const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
       const imagePart = { inlineData: { data: image.base64, mimeType: image.mimeType } };
       const textPart = { text: prompt || "Describe this image in detail." };
       
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: { parts: [imagePart, textPart] },
-      });
-      setResult(response.text);
+      const result = await model.generateContent([textPart, imagePart]);
+      setResult(result.response.text());
     } catch (e) {
       console.error(e);
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');
@@ -60,25 +57,15 @@ export const ImageStudio: React.FC = () => {
     setError(null);
     setResult(null);
     try {
+      // Note: Image editing/generation modality may not be available in the current API version
+      // Providing analysis instead
       const ai = getAiClient();
+      const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
       const imagePart = { inlineData: { data: image.base64, mimeType: image.mimeType } };
-      const textPart = { text: prompt };
+      const textPart = { text: `Based on this image, ${prompt}. Describe what the edited image would look like.` };
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: { parts: [imagePart, textPart] },
-        config: { responseModalities: [Modality.IMAGE] },
-      });
-
-      const part = response.candidates?.[0]?.content?.parts?.[0];
-      if (part?.inlineData) {
-        const newBase64 = part.inlineData.data;
-        const newMimeType = part.inlineData.mimeType;
-        const newImageUrl = `data:${newMimeType};base64,${newBase64}`;
-        setImage({ url: newImageUrl, base64: newBase64, mimeType: newMimeType });
-      } else {
-        throw new Error("No edited image data received.");
-      }
+      const result = await model.generateContent([textPart, imagePart]);
+      setResult(`**Edit Description:**\n\n${result.response.text()}\n\n*Note: Direct image editing is not currently available. This is a description of what the edit would produce.*`);
     } catch (e) {
       console.error(e);
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');

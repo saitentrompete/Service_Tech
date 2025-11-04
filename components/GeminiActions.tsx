@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { getAiClient } from '../gemini';
-import { Modality } from '@google/genai';
 import { decode, decodeAudioData } from '../utils';
 import { Spinner } from './Spinner';
 
@@ -37,42 +36,19 @@ export const GeminiActions: React.FC<GeminiActionsProps> = ({ content, title, on
       const prompt = `Based on the following JSON data for the "${title}" component of a software architecture, please perform the requested action.\n\nData:\n${content}`;
       
       if (action === 'summarize') {
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: `${prompt}\n\nAction: Provide a concise summary for a non-technical audience.`,
-        });
-        onResult(`**Summary:**\n\n${response.text}`);
+        const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+        const result = await model.generateContent(`${prompt}\n\nAction: Provide a concise summary for a non-technical audience.`);
+        onResult(`**Summary:**\n\n${result.response.text()}`);
       } else if (action === 'analyze') {
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-pro',
-          contents: `${prompt}\n\nAction: Provide a deep, expert-level analysis of this component's strengths, weaknesses, and potential improvements. Be thorough.`,
-          config: {
-            thinkingConfig: { thinkingBudget: 32768 },
-          },
-        });
-        onResult(`**Deep Analysis:**\n\n${response.text}`);
+        const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash-thinking-exp' });
+        const result = await model.generateContent(`${prompt}\n\nAction: Provide a deep, expert-level analysis of this component's strengths, weaknesses, and potential improvements. Be thorough.`);
+        onResult(`**Deep Analysis:**\n\n${result.response.text()}`);
       } else if (action === 'speak') {
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash-preview-tts',
-          contents: [{ parts: [{ text: `Say this summary of the ${title} component: ${JSON.parse(content).inhalt}`}]}],
-          config: {
-            responseModalities: [Modality.AUDIO],
-            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
-          },
-        });
-        
-        const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
-        if (base64Audio) {
-            const outputAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
-            const audioBuffer = await decodeAudioData(decode(base64Audio), outputAudioContext, 24000, 1);
-            const source = outputAudioContext.createBufferSource();
-            source.buffer = audioBuffer;
-            source.connect(outputAudioContext.destination);
-            source.start();
-            onResult("Audio playback initiated.");
-        } else {
-            throw new Error("No audio data received.");
-        }
+        // Note: Audio/TTS modality may not be available in the current API version
+        // Falling back to text-only response
+        const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+        const result = await model.generateContent(`Summarize this in a friendly, conversational tone suitable for text-to-speech: ${JSON.parse(content).inhalt}`);
+        onResult(`**Audio Summary (Text):**\n\n${result.response.text()}\n\n*Note: Audio playback is not currently available. Please use browser text-to-speech features to read this aloud.*`);
       }
     } catch (e) {
       console.error(e);

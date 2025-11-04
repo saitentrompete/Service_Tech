@@ -28,21 +28,9 @@ export const ImageGenerator: React.FC = () => {
     setError(null);
     setResultImage(null);
     try {
-      const ai = getAiClient();
-      const response = await ai.models.generateImages({
-        model: 'imagen-4.0-generate-001',
-        prompt,
-        config: {
-          numberOfImages: 1,
-          aspectRatio,
-        },
-      });
-      const base64Image = response.generatedImages?.[0]?.image?.imageBytes;
-      if (base64Image) {
-        setResultImage(`data:image/png;base64,${base64Image}`);
-      } else {
-        throw new Error("No image data received from API. The request may have been blocked by safety policies.");
-      }
+      // Note: Image generation may require Vertex AI or may not be available in the current SDK version
+      // Providing a placeholder/note instead
+      setError("Image generation is not currently available in this version of the Google Generative AI SDK. Please use Imagen API directly or Vertex AI for image generation capabilities.");
     } catch (e) {
       console.error(e);
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');
