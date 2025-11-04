@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { API_DOCUMENTATION_DATA } from '../apiDocumentationData';
 import type { ApiEndpoint } from '../types';
 import { getAiClient } from '../gemini';
-import { Type } from '@google/genai';
+import { SchemaType } from '@google/generative-ai';
 import { Spinner } from './Spinner';
 
 /**
@@ -37,26 +37,27 @@ export const ApiDocumentation: React.FC = () => {
     setGeneratedContent(null);
     try {
         const ai = getAiClient();
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-pro',
-            contents: `Based on the provided software architecture for "MaxTech" (an event management platform), generate a new, plausible example of a GraphQL mutation. Provide the mutation, example variables, and an example JSON response. The existing API includes queries for projects and a mutation to create projects. Suggest a new mutation, for example, to assign a material to a project or update a project's status. Format the output clearly with sections for "Mutation:", "Variables:", and "Response:".`,
-            config: {
+        const model = ai.getGenerativeModel({ 
+            model: 'gemini-2.0-flash-exp',
+            generationConfig: {
                 responseMimeType: 'application/json',
                 responseSchema: {
-                    type: Type.OBJECT,
+                    type: SchemaType.OBJECT,
                     properties: {
-                        title: { type: Type.STRING, description: "A short title for the new mutation example." },
-                        description: { type: Type.STRING, description: "A brief description of what the mutation does." },
-                        mutation: { type: Type.STRING, description: "The GraphQL mutation string." },
-                        variables: { type: Type.STRING, description: "An example variables JSON object as a string." },
-                        response: { type: Type.STRING, description: "An example response JSON object as a string." },
+                        title: { type: SchemaType.STRING, description: "A short title for the new mutation example." },
+                        description: { type: SchemaType.STRING, description: "A brief description of what the mutation does." },
+                        mutation: { type: SchemaType.STRING, description: "The GraphQL mutation string." },
+                        variables: { type: SchemaType.STRING, description: "An example variables JSON object as a string." },
+                        response: { type: SchemaType.STRING, description: "An example response JSON object as a string." },
                     },
                     required: ["title", "description", "mutation", "variables", "response"]
                 },
             },
         });
+        
+        const result = await model.generateContent(`Based on the provided software architecture for "MaxTech" (an event management platform), generate a new, plausible example of a GraphQL mutation. Provide the mutation, example variables, and an example JSON response. The existing API includes queries for projects and a mutation to create projects. Suggest a new mutation, for example, to assign a material to a project or update a project's status. Format the output clearly with sections for "Mutation:", "Variables:", and "Response:".`);
 
-        const generatedJson = JSON.parse(response.text);
+        const generatedJson = JSON.parse(result.response.text());
         const formattedResult = `
 ### ${generatedJson.title}
 **Description**: ${generatedJson.description}

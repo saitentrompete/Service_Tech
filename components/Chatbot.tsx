@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAiClient } from '../gemini';
 import { ARCHITECTURE_JSON } from '../constants';
-import type { Chat } from '@google/genai';
+import type { ChatSession } from '@google/generative-ai';
 import type { ChatMessage } from '../types';
 import { Spinner } from './Spinner';
 
@@ -14,7 +14,7 @@ export const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const chatRef = useRef<Chat | null>(null);
+  const chatRef = useRef<ChatSession | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export const Chatbot: React.FC = () => {
         },
       ];
       const ai = getAiClient();
-      chatRef.current = ai.chats.create({
-        model: 'gemini-2.5-flash',
+      const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+      chatRef.current = model.startChat({
         history: initialHistory,
       });
       setMessages([initialHistory[1]]);
@@ -52,11 +52,12 @@ export const Chatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const stream = await chatRef.current.sendMessageStream({ message: currentInput });
+      const result = await chatRef.current.sendMessageStream(currentInput);
       
       let text = '';
-      for await (const chunk of stream) {
-        text += chunk.text;
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        text += chunkText;
         setMessages(prev => {
             const lastMessageIndex = prev.length - 1;
             const updatedMessages = [...prev];
