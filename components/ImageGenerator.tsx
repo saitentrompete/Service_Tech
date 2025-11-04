@@ -2,8 +2,16 @@ import React, { useState, useCallback } from 'react';
 import { getAiClient } from '../gemini';
 import { Spinner } from './Spinner';
 
+/**
+ * A type representing the aspect ratio of an image.
+ * @typedef {"1:1" | "16:9" | "9:16" | "4:3" | "3:4"} AspectRatio
+ */
 type AspectRatio = "1:1" | "16:9" | "9:16" | "4:3" | "3:4";
 
+/**
+ * A component that allows users to generate images using Gemini.
+ * @returns {JSX.Element} The rendered ImageGenerator component.
+ */
 export const ImageGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("1:1");

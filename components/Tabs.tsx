@@ -9,8 +9,20 @@ interface TabProps {
   children: React.ReactNode;
 }
 
+/**
+ * A single tab component.
+ * @param {object} props - The component props.
+ * @param {React.ReactNode} props.children - The content of the tab.
+ * @returns {JSX.Element} The rendered tab component.
+ */
 export const Tab: React.FC<TabProps> = ({ children }) => <>{children}</>;
 
+/**
+ * A component that displays a set of tabs.
+ * @param {object} props - The component props.
+ * @param {React.ReactNode} props.children - The tab components.
+ * @returns {JSX.Element} The rendered tabs component.
+ */
 export const Tabs: React.FC<TabsProps> = ({ children }) => {
   const [activeTab, setActiveTab] = useState(0);
   const tabsArray = React.Children.toArray(children) as React.ReactElement<TabProps>[];

@@ -4,6 +4,10 @@ import { Modality } from '@google/genai';
 import { blobToBase64 } from '../utils';
 import { Spinner } from './Spinner';
 
+/**
+ * A component that allows users to upload, analyze, and edit images using Gemini.
+ * @returns {JSX.Element} The rendered ImageStudio component.
+ */
 export const ImageStudio: React.FC = () => {
   const [image, setImage] = useState<{ url: string; base64: string; mimeType: string; } | null>(null);
   const [prompt, setPrompt] = useState('');

@@ -3,6 +3,13 @@ import React from 'react';
 import { DEVELOPMENT_BLUEPRINT_DATA } from '../developmentBlueprintData';
 import type { BlueprintPhase } from '../types';
 
+/**
+ * A component that displays a card for a phase in the development blueprint.
+ * @param {object} props - The component props.
+ * @param {BlueprintPhase} props.phase - The phase data.
+ * @param {number} props.index - The index of the phase.
+ * @returns {JSX.Element} The rendered phase card.
+ */
 const PhaseCard: React.FC<{ phase: BlueprintPhase, index: number }> = ({ phase, index }) => (
   <div className="relative pl-8 sm:pl-12 py-6 group">
     {/* Timeline line */}
@@ -27,7 +34,10 @@ const PhaseCard: React.FC<{ phase: BlueprintPhase, index: number }> = ({ phase, 
   </div>
 );
 
-
+/**
+ * A component that displays the development blueprint.
+ * @returns {JSX.Element} The rendered development blueprint component.
+ */
 export const DevelopmentBlueprint: React.FC = () => {
   return (
     <div className="p-6 bg-slate-800 border border-slate-700 rounded-lg">

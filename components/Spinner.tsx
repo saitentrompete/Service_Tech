@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * A spinner component to indicate loading.
+ * @param {object} props - The component props.
+ * @param {string} [props.className='h-5 w-5'] - The class name for the spinner.
+ * @returns {JSX.Element} The rendered spinner component.
+ */
 export const Spinner: React.FC<{ className?: string }> = ({ className = 'h-5 w-5' }) => (
   <svg
     className={`animate-spin text-white ${className}`}

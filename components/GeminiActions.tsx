@@ -13,6 +13,15 @@ interface GeminiActionsProps {
 
 type ActionType = 'summarize' | 'analyze' | 'speak';
 
+/**
+ * A component that provides a set of actions that can be performed by Gemini.
+ * @param {object} props - The component props.
+ * @param {string} props.content - The content to be used in the Gemini actions.
+ * @param {string} props.title - The title of the content.
+ * @param {function} props.onResult - A callback function to handle the result of the action.
+ * @param {function} props.onLoading - A callback function to handle the loading state.
+ * @returns {JSX.Element} The rendered Gemini actions component.
+ */
 export const GeminiActions: React.FC<GeminiActionsProps> = ({ content, title, onResult, onLoading }) => {
   const [loadingAction, setLoadingAction] = useState<ActionType | null>(null);
   const [error, setError] = useState<string | null>(null);

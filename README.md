@@ -2,19 +2,63 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Software Architecture Dashboard
 
-This contains everything you need to run your app locally.
+This is an interactive dashboard that provides a comprehensive overview of a software architecture, enhanced with generative AI capabilities. The application allows users to explore different components of the architecture, generate API documentation, create development blueprints, and much more.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1x0vX2FCylLjG8XJ8-8cOVBUkS82v7F3g
+## Features
 
-## Run Locally
+- **Architecture Overview**: A detailed view of the software architecture components.
+- **Development Blueprint**: A high-level overview of the phased development plan.
+- **API Documentation**: Live examples of GraphQL queries and mutations.
+- **Image Generation**: Generate images from text prompts.
+- **Image Studio**: Upload, analyze, and edit images.
+- **Grounded Search**: Perform grounded searches with Gemini.
+- **Chatbot**: An AI assistant to answer questions about the software architecture.
 
-**Prerequisites:**  Node.js
+## Getting Started
 
+### Prerequisites
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- Node.js
+- A Gemini API key
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/your-repository.git
+   ```
+2. **Navigate to the project directory:**
+   ```bash
+   cd your-repository
+   ```
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+4. **Set up your environment variables:**
+   - Create a file named `.env.local` in the root of the project.
+   - Add the following line to the file, replacing `YOUR_API_KEY` with your actual Gemini API key:
+     ```
+     GEMINI_API_KEY=YOUR_API_KEY
+     ```
+5. **Run the application:**
+   ```bash
+   npm run dev
+   ```
+The application should now be running on `http://localhost:3000`.
+
+## Usage
+
+- **Architecture Overview**: Click on the "Architecture Overview" tab to see the different components of the software architecture. You can expand each component to see more details and use the Gemini actions to summarize, analyze, or read the content aloud.
+- **Development Blueprint**: Click on the "Development Blueprint" tab to see the phased development plan.
+- **API Documentation**: Click on the "API Documentation" tab to see examples of GraphQL queries and mutations. You can also generate new examples using Gemini.
+- **Image Generation**: Click on the "Image Generation" tab to generate images from text prompts.
+- **Image Studio**: Click on the "Image Studio" tab to upload, analyze, and edit images.
+- **Grounded Search**: Click on the "Grounded Search" tab to perform grounded searches with Gemini.
+- **Chatbot**: Click on the chat icon in the bottom right corner to open the chatbot and ask questions about the software architecture.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request.

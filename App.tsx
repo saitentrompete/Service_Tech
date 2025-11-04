@@ -10,6 +10,11 @@ import { Tabs, Tab } from './components/Tabs';
 import { ARCHITECTURE_JSON, DISPLAY_TITLES, ICONS } from './constants';
 import { ArchitectureComponentKey } from './types';
 
+/**
+ * The main component of the application.
+ * Renders the header, tabs, and all the different components of the application.
+ * @returns {JSX.Element} The main application component.
+ */
 function App() {
   const architectureComponents = Object.keys(ARCHITECTURE_JSON.software_architektur_ueberblick) as ArchitectureComponentKey[];
 

@@ -1,3 +1,8 @@
+/**
+ * Converts a Blob object to a base64 encoded string.
+ * @param {Blob} blob The Blob object to convert.
+ * @returns {Promise<string>} A promise that resolves with the base64 encoded string.
+ */
 export function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -13,6 +18,11 @@ export function blobToBase64(blob: Blob): Promise<string> {
   });
 }
 
+/**
+ * Decodes a base64 encoded string into a Uint8Array.
+ * @param {string} base64 The base64 encoded string to decode.
+ * @returns {Uint8Array} The decoded Uint8Array.
+ */
 export function decode(base64: string) {
   const binaryString = atob(base64);
   const len = binaryString.length;
@@ -23,6 +33,14 @@ export function decode(base64: string) {
   return bytes;
 }
 
+/**
+ * Decodes audio data from a Uint8Array into an AudioBuffer.
+ * @param {Uint8Array} data The audio data to decode.
+ * @param {AudioContext} ctx The AudioContext to use for decoding.
+ * @param {number} sampleRate The sample rate of the audio data.
+ * @param {number} numChannels The number of channels in the audio data.
+ * @returns {Promise<AudioBuffer>} A promise that resolves with the decoded AudioBuffer.
+ */
 export async function decodeAudioData(
   data: Uint8Array,
   ctx: AudioContext,
