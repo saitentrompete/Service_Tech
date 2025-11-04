@@ -1,0 +1,8 @@
+{
+  "name": "Software Architecture Visualizer with Gemini",
+  "description": "An interactive web application to visualize and explore software architecture, enhanced with Gemini AI for analysis, content generation, and more.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
