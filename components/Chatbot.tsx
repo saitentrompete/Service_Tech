@@ -17,30 +17,44 @@ export const Chatbot: React.FC = () => {
   const chatRef = useRef<Chat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const initializeChat = () => {
+    const initialHistory: ChatMessage[] = [
+      {
+        role: 'user',
+        parts: [{ text: `You are an expert assistant specializing in software architecture. Your task is to answer questions based on the following JSON data. Be helpful and clear in your explanations.\n\nData:\n${JSON.stringify(ARCHITECTURE_JSON)}` }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'Understood. I am ready to answer your questions about this software architecture. How can I help you?' }],
+      },
+    ];
+    const ai = getAiClient();
+    chatRef.current = ai.chats.create({
+      model: 'gemini-2.5-flash',
+      history: initialHistory,
+    });
+    setMessages([initialHistory[1]]);
+  };
+
   useEffect(() => {
     if (isOpen && !chatRef.current) {
-      const initialHistory: ChatMessage[] = [
-        {
-          role: 'user',
-          parts: [{ text: `You are an expert assistant specializing in software architecture. Your task is to answer questions based on the following JSON data. Be helpful and clear in your explanations.\n\nData:\n${JSON.stringify(ARCHITECTURE_JSON)}` }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I am ready to answer your questions about this software architecture. How can I help you?' }],
-        },
-      ];
-      const ai = getAiClient();
-      chatRef.current = ai.chats.create({
-        model: 'gemini-2.5-flash',
-        history: initialHistory,
-      });
-      setMessages([initialHistory[1]]);
+      initializeChat();
     }
   }, [isOpen]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const handleClear = () => {
+    setMessages([]);
+    setInput('');
+    chatRef.current = null;
+    // Reinitialize the chat when open
+    if (isOpen) {
+      initializeChat();
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim() || !chatRef.current || isLoading) return;
@@ -111,9 +125,14 @@ export const Chatbot: React.FC = () => {
     <div className="fixed bottom-6 right-6 w-[90vw] max-w-md h-[70vh] max-h-[600px] bg-slate-800 border border-slate-700 rounded-xl shadow-2xl flex flex-col z-50">
       <header className="flex items-center justify-between p-4 border-b border-slate-700">
         <h3 className="font-bold text-lg text-slate-100">Architecture Assistant</h3>
-        <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white" aria-label="Close chat">
-           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-        </button>
+        <div className="flex items-center space-x-2">
+          <button onClick={handleClear} className="text-slate-400 hover:text-white" aria-label="Clear all messages" title="Alles löschen">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
+          <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white" aria-label="Close chat">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
       </header>
       <main className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((msg, index) => (
