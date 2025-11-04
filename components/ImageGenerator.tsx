@@ -28,9 +28,12 @@ export const ImageGenerator: React.FC = () => {
     setError(null);
     setResultImage(null);
     try {
-      // Note: Image generation may require Vertex AI or may not be available in the current SDK version
-      // Providing a placeholder/note instead
-      setError("Image generation is not currently available in this version of the Google Generative AI SDK. Please use Imagen API directly or Vertex AI for image generation capabilities.");
+      // Note: Image generation requires Vertex AI or the Imagen API directly.
+      // The @google/generative-ai package focuses on text and multimodal understanding.
+      // For image generation, consider:
+      // 1. Using Vertex AI with the Imagen model: https://cloud.google.com/vertex-ai/docs/generative-ai/image/overview
+      // 2. Using the REST API directly: https://ai.google.dev/api/generate-content
+      setError("Image generation is not currently available in this version of the Google Generative AI SDK. To enable image generation, please use Google Cloud Vertex AI with the Imagen model or implement direct REST API calls to the Imagen endpoint.");
     } catch (e) {
       console.error(e);
       setError(e instanceof Error ? e.message : 'An unknown error occurred.');

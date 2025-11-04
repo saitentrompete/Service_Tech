@@ -51,11 +51,9 @@ export const GroundingSearch: React.FC = () => {
     setResult(null);
     try {
       const ai = getAiClient();
-      const tools = [{ googleSearch: {} }];
-      
       const model = ai.getGenerativeModel({ 
         model: 'gemini-2.0-flash-exp',
-        tools: tools
+        tools: [{ googleSearch: {} }]
       });
       
       const result = await model.generateContent(query);
