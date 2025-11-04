@@ -2,11 +2,20 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { getAiClient } from '../gemini';
 import { Spinner } from './Spinner';
 
+/**
+ * An interface representing a geographic location.
+ * @property {number} latitude - The latitude of the location.
+ * @property {number} longitude - The longitude of the location.
+ */
 interface Geolocation {
   latitude: number;
   longitude: number;
 }
 
+/**
+ * A component that allows users to perform a grounded search using Gemini.
+ * @returns {JSX.Element} The rendered GroundingSearch component.
+ */
 export const GroundingSearch: React.FC = () => {
   const [query, setQuery] = useState('');
   const [useLocation, setUseLocation] = useState(false);

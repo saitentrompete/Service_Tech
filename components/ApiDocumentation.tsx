@@ -5,6 +5,13 @@ import { getAiClient } from '../gemini';
 import { Type } from '@google/genai';
 import { Spinner } from './Spinner';
 
+/**
+ * A component that displays a block of code with syntax highlighting.
+ * @param {object} props - The component props.
+ * @param {string} props.code - The code to display.
+ * @param {string} props.language - The language of the code.
+ * @returns {JSX.Element} The rendered code block.
+ */
 const CodeBlock: React.FC<{ code: string; language: string }> = ({ code, language }) => (
   <pre className="bg-slate-900/70 rounded-md p-4 text-sm text-slate-200 overflow-x-auto">
     <code className={`language-${language}`}>
@@ -13,6 +20,11 @@ const CodeBlock: React.FC<{ code: string; language: string }> = ({ code, languag
   </pre>
 );
 
+/**
+ * A component that displays API documentation.
+ * It allows the user to view different API endpoints and generate new examples using Gemini.
+ * @returns {JSX.Element} The rendered API documentation component.
+ */
 export const ApiDocumentation: React.FC = () => {
   const [activeEndpoint, setActiveEndpoint] = useState<ApiEndpoint>(API_DOCUMENTATION_DATA[0]);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);

@@ -5,6 +5,10 @@ import type { Chat } from '@google/genai';
 import type { ChatMessage } from '../types';
 import { Spinner } from './Spinner';
 
+/**
+ * A chatbot component that allows users to ask questions about the software architecture.
+ * @returns {JSX.Element} The rendered chatbot component.
+ */
 export const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);

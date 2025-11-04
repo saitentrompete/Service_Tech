@@ -9,6 +9,13 @@ interface ArchitectureCardProps {
   icon: React.ReactNode;
 }
 
+/**
+ * A component that displays a section of details.
+ * @param {object} props - The component props.
+ * @param {string} props.title - The title of the section.
+ * @param {string | undefined} props.content - The content of the section.
+ * @returns {JSX.Element | null} The rendered detail section, or null if there is no content.
+ */
 const DetailSection: React.FC<{ title: string; content: string | undefined }> = ({ title, content }) => {
   if (!content) return null;
 
@@ -25,6 +32,14 @@ const DetailSection: React.FC<{ title: string; content: string | undefined }> = 
   );
 };
 
+/**
+ * A component that displays a card with information about a software architecture component.
+ * @param {object} props - The component props.
+ * @param {string} props.title - The title of the card.
+ * @param {ArchitectureComponentDetail} props.data - The data for the component.
+ * @param {React.ReactNode} props.icon - The icon for the card.
+ * @returns {JSX.Element} The rendered architecture card.
+ */
 export const ArchitectureCard: React.FC<ArchitectureCardProps> = ({ title, data, icon }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
