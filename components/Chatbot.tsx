@@ -17,24 +17,28 @@ export const Chatbot: React.FC = () => {
   const chatRef = useRef<Chat | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const initializeChat = () => {
+    const initialHistory: ChatMessage[] = [
+      {
+        role: 'user',
+        parts: [{ text: `You are an expert assistant specializing in software architecture. Your task is to answer questions based on the following JSON data. Be helpful and clear in your explanations.\n\nData:\n${JSON.stringify(ARCHITECTURE_JSON)}` }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'Understood. I am ready to answer your questions about this software architecture. How can I help you?' }],
+      },
+    ];
+    const ai = getAiClient();
+    chatRef.current = ai.chats.create({
+      model: 'gemini-2.5-flash',
+      history: initialHistory,
+    });
+    setMessages([initialHistory[1]]);
+  };
+
   useEffect(() => {
     if (isOpen && !chatRef.current) {
-      const initialHistory: ChatMessage[] = [
-        {
-          role: 'user',
-          parts: [{ text: `You are an expert assistant specializing in software architecture. Your task is to answer questions based on the following JSON data. Be helpful and clear in your explanations.\n\nData:\n${JSON.stringify(ARCHITECTURE_JSON)}` }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I am ready to answer your questions about this software architecture. How can I help you?' }],
-        },
-      ];
-      const ai = getAiClient();
-      chatRef.current = ai.chats.create({
-        model: 'gemini-2.5-flash',
-        history: initialHistory,
-      });
-      setMessages([initialHistory[1]]);
+      initializeChat();
     }
   }, [isOpen]);
 
@@ -46,24 +50,9 @@ export const Chatbot: React.FC = () => {
     setMessages([]);
     setInput('');
     chatRef.current = null;
-    // Reinitialize the chat when needed
+    // Reinitialize the chat when open
     if (isOpen) {
-      const initialHistory: ChatMessage[] = [
-        {
-          role: 'user',
-          parts: [{ text: `You are an expert assistant specializing in software architecture. Your task is to answer questions based on the following JSON data. Be helpful and clear in your explanations.\n\nData:\n${JSON.stringify(ARCHITECTURE_JSON)}` }],
-        },
-        {
-          role: 'model',
-          parts: [{ text: 'Understood. I am ready to answer your questions about this software architecture. How can I help you?' }],
-        },
-      ];
-      const ai = getAiClient();
-      chatRef.current = ai.chats.create({
-        model: 'gemini-2.5-flash',
-        history: initialHistory,
-      });
-      setMessages([initialHistory[1]]);
+      initializeChat();
     }
   };
 
